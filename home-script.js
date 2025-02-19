@@ -44,12 +44,17 @@ function processElements() {
         const oneMonthLater = new Date(currentDate);
         oneMonthLater.setMonth(currentDate.getMonth() + 1);
 
+        const notificationParent = contractTarget.closest(
+          ".app-wrap.for-notification"
+        );
         if (contractDate > oneMonthLater) {
-          const notificationParent = contractTarget.closest(
-            ".app-wrap.for-notification"
-          );
           if (notificationParent) {
             notificationParent.remove();
+          }
+        } else {
+          // If notificationParent is not removed, set display to block
+          if (notificationParent) {
+            notificationParent.style.display = "block";
           }
         }
       } else {
@@ -90,6 +95,8 @@ function processElements() {
       const parentElement = element.closest(".app-content_cli");
 
       if (parentElement) {
+        let shouldRemove = false;
+
         if (
           (planConditionValue === 1 && targetValue !== 1) ||
           (planConditionValue === 2 &&
@@ -105,11 +112,35 @@ function processElements() {
             targetValue !== 3 &&
             targetValue !== 4)
         ) {
+          shouldRemove = true;
+        }
+
+        if (shouldRemove) {
           parentElement.remove();
+        } else {
+          // If parentElement is not removed, set display to block
+          parentElement.style.display = "block";
         }
       }
     });
   }
+
+  // Get the text content from the trigger element
+  const planText = planTrigger.textContent.trim();
+
+  // Select all elements with the class .app-plans_item and an attribute plan
+  const appPlanItems = document.querySelectorAll(".app-plans_item[plan]");
+
+  appPlanItems.forEach((item) => {
+    // Get the dynamic data attribute value
+    const dynamicData = item.getAttribute("plan");
+
+    // Compare the trigger text with the dynamic data
+    if (planText === dynamicData) {
+      // Add the class 'active' if they match
+      item.classList.add("active");
+    }
+  });
 
   // New functionality: Handle weight-memberstack-ID logic
   const weightElements = document.querySelectorAll("[weight-memberstack-ID]");
@@ -151,4 +182,51 @@ function processElements() {
       numbersWrapper.remove();
     }
   }
+  // Retrieve text data from elements
+  const personNameElement = document.querySelector('[person-name="trigger"]');
+  const companyNameElement = document.querySelector('[company-name="trigger"]');
+  const contactNumberElement = document.querySelector(
+    '[contact-number="trigger"]'
+  );
+  const emailElement = document.querySelector('[email="trigger"]');
+
+  const personName = personNameElement
+    ? personNameElement.textContent.trim()
+    : "";
+  const companyName = companyNameElement
+    ? companyNameElement.textContent.trim()
+    : "";
+  const contactNumber = contactNumberElement
+    ? contactNumberElement.textContent.trim()
+    : "";
+  const email = emailElement ? emailElement.textContent.trim() : "";
+
+  // Set values to all relevant input fields
+  const contactPersonInputs = document.querySelectorAll(
+    'input[name="Contact-person"]'
+  );
+  contactPersonInputs.forEach((input) => {
+    input.value = personName;
+  });
+
+  const companyNameInputs = document.querySelectorAll(
+    'input[name="Company-name"]'
+  );
+  companyNameInputs.forEach((input) => {
+    input.value = companyName;
+  });
+
+  const phoneNumberInputs = document.querySelectorAll(
+    'input[name="Phone-number"]'
+  );
+  phoneNumberInputs.forEach((input) => {
+    input.value = contactNumber;
+  });
+
+  const companyMailInputs = document.querySelectorAll(
+    'input[name="Company-mail"]'
+  );
+  companyMailInputs.forEach((input) => {
+    input.value = email;
+  });
 }

@@ -30,8 +30,9 @@ function processElements() {
         element.getAttribute("member-id-recent") === dataFromTextElement;
 
       if (isMatchingElement && !firstMatchingElementFound) {
-        // Keep the first matching element
+        // Keep the first matching element and set its display to block
         firstMatchingElementFound = true;
+        element.style.display = "block";
       } else {
         // Remove all other elements
         element.remove();

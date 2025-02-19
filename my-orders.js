@@ -19,6 +19,8 @@ function processElements() {
       if (isMatchingElement) {
         // Keep all matching elements
         anyMatchingElementFound = true;
+        // Set display to block for matching elements
+        element.style.display = "block";
       } else {
         // Remove all non-matching elements
         element.remove();
@@ -26,11 +28,11 @@ function processElements() {
     });
 
     // Step 3: If no matching element was found, remove the parent with class '.app-orders_clw'
-    if (!anyMatchingElementFound) {
-      const parentElement = document.querySelector(".app-orders_clw");
-      if (parentElement) {
-        parentElement.remove();
-      }
+    let parentElementRemoved = false;
+    const parentElement = document.querySelector(".app-orders_clw");
+    if (!anyMatchingElementFound && parentElement) {
+      parentElement.remove();
+      parentElementRemoved = true;
     }
 
     // Step 4: Manage the visibility of the element with [orders-empty-state]
@@ -38,10 +40,12 @@ function processElements() {
       "[orders-empty-state]"
     );
     if (ordersEmptyStateElement) {
-      if (document.querySelectorAll(".app-orders_cli").length > 0) {
-        ordersEmptyStateElement.remove();
+      if (parentElementRemoved) {
+        // If parentElement was removed, ensure ordersEmptyStateElement is visible
+        ordersEmptyStateElement.style.display = "block";
       } else {
-        ordersEmptyStateElement.style.display = ""; // Ensure it's visible
+        // If parentElement was not removed, remove ordersEmptyStateElement
+        ordersEmptyStateElement.remove();
       }
     }
   }
